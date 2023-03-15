@@ -72,8 +72,6 @@ jobs:
     name: Run tests on PHP v${{ matrix.php-version }}
 
     steps:
-      - name: Waiting for repo
-        run: sleep 10
 
       - name: Checkout code
         uses: actions/checkout@v3

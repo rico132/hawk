@@ -72,6 +72,12 @@ jobs:
     name: Run tests on PHP v${{ matrix.php-version }}
 
     steps:
+      - name: Waiting for repo
+        run: sleep 10
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -80,7 +86,6 @@ jobs:
       - name: Set composer cache directory
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-#        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
       - name: Restore composer from cache
         uses: actions/cache@v2
@@ -91,9 +96,6 @@ jobs:
 
       - name: Install composer dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
-
-      - name: Checkout code
-        uses: actions/checkout@v3
 
       - name: Run phpunit tests
         run: vendor/bin/phpunit --colors=always --testdox

@@ -72,9 +72,6 @@ jobs:
     name: Run tests on PHP v${{ matrix.php-version }}
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -94,6 +91,9 @@ jobs:
 
       - name: Install composer dependencies
         run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Run phpunit tests
         run: vendor/bin/phpunit --colors=always --testdox

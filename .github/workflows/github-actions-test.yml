@@ -2,7 +2,7 @@ name: Test
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 env:
-  VERSIONS_LOCATION: "examples/resources/versions"
+  VERSIONS_LOCATION: "examples/resources/versions/"
 jobs:
   checkForNewVersion:
     runs-on: ubuntu-latest

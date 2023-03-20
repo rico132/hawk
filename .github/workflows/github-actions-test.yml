@@ -2,9 +2,6 @@ name: Test
 run-name: ${{ github.actor }} is testing out GitHub Actions
 on:
   push:
-    branches:
-      - main
-      - master
   pull_request:
   schedule:
       - cron: '*/1 * * * *'

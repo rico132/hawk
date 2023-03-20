@@ -3,8 +3,8 @@ run-name: ${{ github.actor }} is testing out GitHub Actions
 on:
   schedule:
       - cron: '* * * * *'
-  push:
-  pull_request:
+#  push:
+#  pull_request:
 env:
   VERSIONS_LOCATION: "examples/resources/versions/"
 jobs:

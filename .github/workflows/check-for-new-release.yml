@@ -1,4 +1,4 @@
-name: Release Check
+name: Snapshot Check
 run-name: ${{ github.actor }} is checking for new version
 on:
   push:

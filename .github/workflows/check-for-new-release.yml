@@ -1,5 +1,5 @@
-name: Test
-run-name: ${{ github.actor }} is testing out GitHub Actions
+name: Release Check
+run-name: ${{ github.actor }} is checking for new version
 on:
   push:
   pull_request:

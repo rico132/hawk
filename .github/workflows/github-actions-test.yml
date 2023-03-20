@@ -7,7 +7,7 @@ on:
       - master
   pull_request:
   schedule:
-      - cron: '0 22 * * *'
+      - cron: '0 /5 * * *'
 env:
   VERSIONS_LOCATION: "examples/resources/versions/"
 jobs:

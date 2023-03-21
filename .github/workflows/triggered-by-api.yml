@@ -62,12 +62,12 @@ jobs:
       - name: Copy upgraded world into version folder
         run: cp -R ${{ env.VERSIONS_LOCATION }}latest ${{ env.VERSIONS_LOCATION }}${{ github.event.inputs.VERSION }}
 
-      - if: ${{ github.event.inputs.IS_RELEASE == 'true' }}
-        uses: EndBug/add-and-commit@v9
-        with:
-          add: ./${{ env.VERSIONS_LOCATION }}${{ env.LATEST }}/* ./${{ env.VERSIONS_LOCATION }}latest/*
-          message: 'add latest Minecraft world'
-          push: true
+#      - if: ${{ github.event.inputs.IS_RELEASE == 'true' }}
+#        uses: EndBug/add-and-commit@v9
+#        with:
+#          add: ./${{ env.VERSIONS_LOCATION }}${{ env.LATEST }}/* ./${{ env.VERSIONS_LOCATION }}latest/*
+#          message: 'add latest Minecraft world'
+#          push: true
 
   tests:
     runs-on: ubuntu-latest

@@ -115,5 +115,10 @@ jobs:
       - tests
     if: ${{ github.event.inputs.IS_RELEASE != null && github.event.inputs.IS_RELEASE == 'false' }}
     steps:
+      - name: Checkout snapshots
+        uses: actions/checkout@v3
+        with:
+          ref: snapshots
+
       - name: Delete snapshot branch
         run: git push origin --delete snapshots

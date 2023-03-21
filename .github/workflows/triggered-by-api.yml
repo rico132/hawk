@@ -14,7 +14,7 @@ on:
 env:
   VERSIONS_LOCATION: "examples/resources/versions/"
 jobs:
-  createWorld:
+  create-world:
     runs-on: ubuntu-latest
     permissions: write-all
     if: ${{ github.event.inputs.VERSION != null && github.event.inputs.IS_RELEASE != null }}
@@ -57,7 +57,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     needs:
-      - createWorld
+      - create-world
 
     strategy:
       matrix:
@@ -108,6 +108,12 @@ jobs:
       - name: Run phpunit tests
         run: vendor/bin/phpunit --colors=always --testdox
 
-      - if: ${{ github.event.inputs.IS_RELEASE == 'false' }}
-        name: Delete snapshot branch
+  delete-snapshot-branch:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    needs:
+      - tests
+    if: ${{ github.event.inputs.IS_RELEASE != null && github.event.inputs.IS_RELEASE == 'false' }}
+    steps:
+      - name: Delete snapshot branch
         run: git push origin --delete snapshots

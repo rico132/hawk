@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+        with:
+          ref: master
 
       - name: Get last version
         run: echo "LAST_VERSION=$(curl -sSL "https://piston-meta.mojang.com/mc/game/version_manifest.json" | jq -cr '[.versions[] | select(.type == "release")] [1] .id')" >> $GITHUB_ENV

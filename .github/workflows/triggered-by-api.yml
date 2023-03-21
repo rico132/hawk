@@ -43,7 +43,7 @@ jobs:
         name: Committing to master
         uses: EndBug/add-and-commit@v9
         with:
-          add: ./${{ env.VERSIONS_LOCATION }}${{ github.event.inputs.VERSION }}/*
+          add: './${{ env.VERSIONS_LOCATION }}${{ github.event.inputs.VERSION }}/*'
           message: 'add latest Minecraft world'
           push: true
 
@@ -51,7 +51,7 @@ jobs:
         name: Committing to snapshots
         uses: EndBug/add-and-commit@v9
         with:
-          add: ./${{ env.VERSIONS_LOCATION }}${{ github.event.inputs.VERSION }}/*
+          add: './${{ env.VERSIONS_LOCATION }}${{ github.event.inputs.VERSION }}/*'
           new_branch: snapshots
           message: 'add latest Minecraft world'
           push: true

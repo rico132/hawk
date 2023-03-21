@@ -33,8 +33,8 @@ jobs:
 
   createWorld:
     runs-on: ubuntu-latest
-    needs:
-      - checkForNewVersion
+#    needs:
+#      - checkForNewVersion
     permissions: write-all
 #    if: ${{ needs.checkForNewVersion.outputs.isInRepo == 'FALSE' }}
 #    if: ${{ github.event.inputs.VERSION != null && github.event.inputs.IS_RELEASE != null }}

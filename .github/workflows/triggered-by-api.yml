@@ -68,14 +68,14 @@ jobs:
     if: always()
 
     steps:
-      - if: ${{ github.event.inputs.RELEASE == 'true' || github.event.inputs.RELEASE == null }}
-        name: Checkout code
+      - if: ${{ github.event.inputs.IS_RELEASE == 'true' || github.event.inputs.IS_RELEASE == null }}
+        name: Checkout master
         uses: actions/checkout@v3
         with:
           ref: master
 
-      - if: ${{ github.event.inputs.RELEASE == 'false' }}
-        name: Checkout code
+      - if: ${{ github.event.inputs.IS_RELEASE == 'false' }}
+        name: Checkout snapshots
         uses: actions/checkout@v3
         with:
           ref: snapshots
@@ -108,6 +108,6 @@ jobs:
       - name: Run phpunit tests
         run: vendor/bin/phpunit --colors=always --testdox
 
-      - if: ${{ github.event.inputs.RELEASE == 'false' }}
+      - if: ${{ github.event.inputs.IS_RELEASE == 'false' }}
         name: Delete snapshot branch
         run: git push origin --delete snapshots

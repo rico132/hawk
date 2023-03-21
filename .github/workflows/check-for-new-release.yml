@@ -1,6 +1,6 @@
 name: Snapshot Check
 run-name: ${{ github.actor }} is checking for new release version
-on:
+#on:
 #  push:
 #  pull_request:
 env:

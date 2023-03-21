@@ -20,7 +20,7 @@ jobs:
 
     outputs:
       isInRepo: ${{ steps.save-var.outputs.IS_IN_REPO }}
-    if: ${{ github.event.inputs.IS_RELEASE == null }}
+    if: ${{ github.event.inputs.IS_RELEASE != null }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3

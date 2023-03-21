@@ -14,30 +14,10 @@ on:
 env:
   VERSIONS_LOCATION: "examples/resources/versions/"
 jobs:
-#  checkForNewVersion:
-#    runs-on: ubuntu-latest
-#    permissions: read-all
-#    outputs:
-#      isInRepo: ${{ steps.save-var.outputs.IS_IN_REPO }}
-#    if: ${{ github.event.inputs.IS_RELEASE == null }}
-#    steps:
-#      - name: Checkout repo
-#        uses: actions/checkout@v3
-#      - name: Check for latest
-#        id: save-var
-#        run: |
-#          LATEST=$(curl -sSL "https://piston-meta.mojang.com/mc/game/version_manifest.json" | jq -cr '.latest.release')
-#          if [[ -e ${{ env.VERSIONS_LOCATION }}"$LATEST" ]]; then echo "IS_IN_REPO=TRUE" >> $GITHUB_OUTPUT; else echo "IS_IN_REPO=FALSE" >> $GITHUB_OUTPUT; fi
-#      - name: Is latest in repo?
-#        run: echo "${{ steps.save-var.outputs.IS_IN_REPO }}"
-
   createWorld:
     runs-on: ubuntu-latest
-#    needs:
-#      - checkForNewVersion
     permissions: write-all
-#    if: ${{ needs.checkForNewVersion.outputs.isInRepo == 'FALSE' }}
-#    if: ${{ github.event.inputs.VERSION != null && github.event.inputs.IS_RELEASE != null }}
+    if: ${{ github.event.inputs.VERSION != null && github.event.inputs.IS_RELEASE != null }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -83,13 +63,13 @@ jobs:
     if: always()
 
     steps:
-      - name: Show resource folder
-        run: tree ${{ env.VERSIONS_LOCATION }}
-
       - name: Checkout code
         uses: actions/checkout@v3
         with:
           ref: ${{ github.ref }}
+
+      - name: Show resource folder
+        run: tree ${{ env.VERSIONS_LOCATION }}
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2

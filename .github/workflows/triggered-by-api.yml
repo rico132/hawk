@@ -3,13 +3,13 @@ run-name: ${{ github.actor }} is checking for new release version
 on:
   push:
   pull_request:
-    workflow_dispatch:
-      inputs:
-        IS_RELEASE:
-          required: true
-          type: boolean
-        VERSION:
-          required: true
+  workflow_dispatch:
+    inputs:
+      IS_RELEASE:
+        required: true
+        type: boolean
+      VERSION:
+        required: true
 
 env:
   VERSIONS_LOCATION: "examples/resources/versions/"

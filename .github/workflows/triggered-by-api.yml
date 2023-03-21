@@ -17,45 +17,66 @@ jobs:
   createWorld:
     runs-on: ubuntu-latest
     permissions: write-all
-    strategy:
-      matrix:
-        php-version: [ '8.0', '8.1', '8.2' ]
-
+    if: ${{ github.event.inputs.VERSION != null && github.event.inputs.IS_RELEASE != null }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-#      - name: Get latest version
-#        run: |
-#          echo "LATEST=$(curl -sSL "https://piston-meta.mojang.com/mc/game/version_manifest.json" |
-#          jq -cr '.latest.release')" >> $GITHUB_ENV
-
-      - if: ${{ github.event.inputs.VERSION != null && github.event.inputs.IS_RELEASE != null }}
-        name: Get last version
+      - name: Get last version
         run: echo "LAST_VERSION=$(curl -sSL "https://piston-meta.mojang.com/mc/game/version_manifest.json" | jq -cr '[.versions[] | select(.type == "release")] [1] .id')" >> $GITHUB_ENV
 
-      - if: ${{ github.event.inputs.VERSION != null && github.event.inputs.IS_RELEASE != null }}
-        name: Delete latest version folder
+      - name: Delete latest version folder
         run: rm -r ${{ env.VERSIONS_LOCATION }}latest
 
-      - if: ${{ github.event.inputs.VERSION != null && github.event.inputs.IS_RELEASE != null }}
-        name: Copy last version into latest folder
+      - name: Copy last version into latest folder
         run: cp -R ${{ env.VERSIONS_LOCATION }}${{ env.LAST_VERSION }} ${{ env.VERSIONS_LOCATION }}latest
 
-      - if: ${{ github.event.inputs.VERSION != null && github.event.inputs.IS_RELEASE != null }}
-        name: Start server
+      - name: Start server
         run: docker run --ip 172.17.0.2 --name mc -e EULA=TRUE -e UID="$(id -u)" -e VERSION=${{ github.event.inputs.VERSION }} -e ENABLE_AUTOSTOP=TRUE -e AUTOSTOP_TIMEOUT_INIT=5 -e MEMORY=8G -v "$GITHUB_WORKSPACE"/${{ env.VERSIONS_LOCATION }}latest itzg/minecraft-server:latest --forceUpgrade
 
-      - if: ${{ github.event.inputs.VERSION != null && github.event.inputs.IS_RELEASE != null }}
-        name: Copy upgraded world into version folder
+      - name: Copy upgraded world into version folder
         run: cp -R ${{ env.VERSIONS_LOCATION }}latest ${{ env.VERSIONS_LOCATION }}${{ github.event.inputs.VERSION }}
 
-      - if: ${{ github.event.inputs.VERSION != null && github.event.inputs.IS_RELEASE == 'true' }}
+      - if: ${{ github.event.inputs.IS_RELEASE == 'true' }}
         uses: EndBug/add-and-commit@v9
         with:
           add: ./${{ env.VERSIONS_LOCATION }}${{ github.event.inputs.VERSION }}/*
           message: 'add latest Minecraft world'
           push: true
+
+      - if: ${{ github.event.inputs.IS_RELEASE == 'false' }}
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: ./${{ env.VERSIONS_LOCATION }}${{ github.event.inputs.VERSION }}/*
+          new_branch: snapshots
+          message: 'add latest Minecraft world'
+          push: true
+
+  tests:
+    runs-on: ubuntu-latest
+    needs:
+      - createWorld
+
+    strategy:
+      matrix:
+        php-version: [ '8.0', '8.1', '8.2' ]
+
+    name: Run tests on PHP v${{ matrix.php-version }}
+
+    if: always()
+
+    steps:
+      - if: ${{ github.event.inputs.RELEASE == 'true' || github.event.inputs.RELEASE == null }}
+        name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: master
+
+      - if: ${{ github.event.inputs.RELEASE == 'false' }}
+        name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: snapshots
 
       - name: Show resource folder
         run: tree ${{ env.VERSIONS_LOCATION }}
@@ -85,23 +106,6 @@ jobs:
       - name: Run phpunit tests
         run: vendor/bin/phpunit --colors=always --testdox
 
-#  tests:
-#    runs-on: ubuntu-latest
-#    needs:
-#      - createWorld
-#
-#    strategy:
-#      matrix:
-#        php-version: [ '8.0', '8.1', '8.2' ]
-#
-#    name: Run tests on PHP v${{ matrix.php-version }}
-#
-#    if: always()
-#
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#        with:
-#          ref: ${{ github.ref }}
-#
-#
+      - if: ${{ github.event.inputs.RELEASE == 'false' }}
+        name: Delete snapshot branch
+        run: git push origin --delete snapshots

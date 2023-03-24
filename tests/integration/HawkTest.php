@@ -17,7 +17,7 @@ class HawkTest extends HawkTestCase
 {
     public function getBlockCoords(): McCoordinates3D
     {
-        return new McCoordinates3D(10, 1, 1);
+        return new McCoordinates3D(1, 1, 1);
     }
 
     public function getNegativeBlockCoords(): McCoordinates3D

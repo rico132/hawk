@@ -134,7 +134,7 @@ jobs:
     permissions: write-all
     needs:
       - tests
-    if: ${{ github.event.inputs.IS_RELEASE != null && github.event.inputs.IS_RELEASE == 'false' }}
+    if: ${{ always() && github.event.inputs.IS_RELEASE != null && github.event.inputs.IS_RELEASE == 'false' }}
     steps:
       - name: Checkout snapshots
         uses: actions/checkout@v3
